@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Roland Agency — World-class web design, brand identity, and AI automation systems.">
+    <title>ROLAND — Digital Experience Agency</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600&family=Cormorant:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+    <style>
+        :root {
+            --bg: #07070A;
+            --bg-elevated: #0C0C11;
+            --bg-card: #101016;
+            --border: rgba(255,255,255,0.055);
+            --border-hover: rgba(255,255,255,0.13);
+            --text: #F3F3F8;
+            --text-sub: rgba(243,243,248,0.52);
+            --text-muted: rgba(243,243,248,0.28);
+            --accent: #6D5FED;
+            --accent-bright: #9187FF;
+            --accent-glow: rgba(109,95,237,0.22);
+            --lime: #C4FF00;
+            --font-display: 'Syne', sans-serif;
+            --font-body: 'Space Grotesk', sans-serif;
+            --font-serif: 'Cormorant', serif;
+            --ease-expo: cubic-bezier(0.19,1,0.22,1);
+            --ease-spring: cubic-bezier(0.34,1.56,0.64,1);
+            --ease-quart: cubic-bezier(0.77,0,0.175,1);
+            --r-sm: 8px;
+            --r-md: 14px;
+            --r-lg: 22px;
+            --r-xl: 32px;
+            --r-full: 9999px;
+            --gutter: clamp(1.25rem, 4vw, 4rem);
+        }
+
+        *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-body);
+            line-height: 1.5;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        a { color: inherit; text-decoration: none; }
+        button { cursor: none; border: none; background: none; font-family: var(--font-body); }
+        img,video { max-width: 100%; display: block; }
+
+        /* Grain overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: -200%;
+            width: 400%; height: 400%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            opacity: 0.032;
+            animation: grain 0.6s steps(1) infinite;
+            pointer-events: none;
+            z-index: 9997;
+        }
+        @keyframes grain {
+            0%,100%{transform:translate(0,0)}10%{transform:translate(-5%,-5%)}20%{transform:translate(-10%,5%)}30%{transform:translate(5%,-10%)}40%{transform:translate(-5%,15%)}50%{transform:translate(-10%,5%)}60%{transform:translate(15%,0)}70%{transform:translate(0,10%)}80%{transform:translate(-15%,0)}90%{transform:translate(10%,5%)}
+        }
+
+        /* === CURSOR === */
+        .cursor,.cursor-ring { position: fixed; top:0; left:0; border-radius:50%; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); }
+        .cursor { width:10px; height:10px; background:var(--text); mix-blend-mode:exclusion; transition:transform 0.1s var(--ease-expo); }
+        .cursor-ring { width:38px; height:38px; border:1.5px solid rgba(255,255,255,0.35); z-index:9998; transition:width 0.3s var(--ease-expo),height 0.3s var(--ease-expo),border-color 0.3s; }
+        .cursor.hov { transform:translate(-50%,-50%) scale(2.2); }
+        .cursor-ring.hov { width:58px; height:58px; border-color:var(--accent-bright); }
+
+        /* === LAYOUT === */
+        .container { max-width:1400px; margin:0 auto; padding:0 var(--gutter); }
+
+        /* === NAV === */
+        .nav {
+            position: fixed; top:1.25rem; left:50%; transform:translateX(-50%);
+            width:calc(100% - 2.5rem); max-width:1200px; z-index:1000;
+        }
+        .nav-inner {
+            display:flex; align-items:center; justify-content:space-between;
+            padding:0.8rem 1.375rem;
+            background:rgba(7,7,10,0.65);
+            backdrop-filter:blur(22px) saturate(160%);
+            -webkit-backdrop-filter:blur(22px) saturate(160%);
+            border:1px solid var(--border-hover);
+            border-radius:var(--r-xl);
+            transition:background 0.3s;
+        }
+        .nav-inner.scrolled { background:rgba(7,7,10,0.9); }
+        .nav-logo { font-family:var(--font-display); font-weight:800; font-size:1.2rem; letter-spacing:-0.025em; }
+        .nav-logo span { color:var(--accent-bright); }
+        .nav-links { display:flex; gap:2.25rem; list-style:none; }
+        .nav-links a { font-size:0.875rem; font-weight:500; color:var(--text-sub); letter-spacing:0.01em; transition:color 0.2s; }
+        .nav-links a:hover { color:var(--text); }
+        .nav-cta {
+            display:inline-flex; align-items:center; gap:0.5rem;
+            padding:0.6rem 1.2rem;
+            background:var(--text); color:var(--bg);
+            border-radius:var(--r-full);
+            font-size:0.875rem; font-weight:600;
+            transition:opacity 0.2s, transform 0.25s var(--ease-spring);
+        }
+        .nav-cta:hover { opacity:0.88; transform:scale(1.03); }
+        .nav-burger { display:none; flex-direction:column; gap:4px; width:26px; }
+        .nav-burger span { height:1.5px; background:var(--text); border-radius:2px; transition:0.3s; }
+
+        /* === HERO === */
+        .hero { position:relative; height:100vh; min-height:680px; display:flex; align-items:flex-end; overflow:hidden; }
+        .hero-vid { position:absolute; inset:0; z-index:0; }
+        .hero-vid video { width:100%; height:100%; object-fit:cover; }
+        .hero-overlay {
+            position:absolute; inset:0; z-index:1;
+            background:linear-gradient(to bottom, rgba(7,7,10,0.25) 0%, rgba(7,7,10,0.15) 40%, rgba(7,7,10,0.96) 100%);
+        }
+        .hero-content { position:relative; z-index:2; width:100%; padding-bottom:clamp(3rem,7vh,6.5rem); }
+        .hero-eye {
+            display:inline-flex; align-items:center; gap:0.625rem;
+            font-size:0.775rem; font-weight:600; letter-spacing:0.18em;
+            text-transform:uppercase; color:var(--text-sub); margin-bottom:1.375rem;
+        }
+        .hero-eye::before { content:''; width:22px; height:1.5px; background:var(--accent-bright); }
+        .hero-title {
+            font-family:var(--font-display);
+            font-weight:800;
+            font-size:clamp(3.75rem,9.5vw,10.5rem);
+            line-height:0.895;
+            letter-spacing:-0.045em;
+            margin-bottom:0;
+        }
+        .hero-title .line { display:block; overflow:hidden; }
+        .hero-title .serif-word {
+            font-family:var(--font-serif);
+            font-weight:300;
+            font-style:italic;
+            color:var(--accent-bright);
+            font-size:0.82em;
+            letter-spacing:-0.02em;
+        }
+        .hero-foot { display:flex; align-items:flex-end; justify-content:space-between; gap:2rem; margin-top:2.75rem; flex-wrap:wrap; }
+        .hero-sub { max-width:360px; font-size:1.0rem; color:var(--text-sub); line-height:1.7; }
+        .hero-btns { display:flex; align-items:center; gap:0.875rem; }
+        .hero-scroll-ind { display:flex; flex-direction:column; align-items:center; gap:0.5rem; font-size:0.72rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--text-muted); }
+        .scroll-line { width:1px; height:48px; background:linear-gradient(to bottom, var(--text-muted), transparent); animation:scrollpulse 2s ease-in-out infinite; }
+        @keyframes scrollpulse { 0%,100%{opacity:0.3}50%{opacity:1} }
+
+        /* === BUTTONS === */
+        .btn-p {
+            display:inline-flex; align-items:center; gap:0.75rem;
+            padding:0.9375rem 1.875rem;
+            background:var(--text); color:var(--bg);
+            border-radius:var(--r-full);
+            font-size:0.9375rem; font-weight:600; font-family:var(--font-body);
+            transition:opacity 0.2s, transform 0.25s var(--ease-spring);
+            position:relative; overflow:hidden;
+        }
+        .btn-p:hover { opacity:0.9; }
+        .btn-p .arr {
+            width:26px; height:26px; border-radius:50%;
+            background:rgba(0,0,0,0.1);
+            display:flex; align-items:center; justify-content:center;
+            transition:transform 0.3s var(--ease-spring);
+        }
+        .btn-p:hover .arr { transform:rotate(45deg); }
+        .btn-g {
+            display:inline-flex; align-items:center; gap:0.5rem;
+            padding:0.9375rem 1.875rem;
+            border:1px solid var(--border-hover); color:var(--text);
+            border-radius:var(--r-full);
+            font-size:0.9375rem; font-weight:500; font-family:var(--font-body);
+            backdrop-filter:blur(10px);
+            transition:border-color 0.25s, background 0.25s;
+        }
+        .btn-g:hover { border-color:rgba(255,255,255,0.28); background:rgba(255,255,255,0.04); }
+
+        /* === TICKER === */
+        .ticker {
+            overflow:hidden; padding:1.125rem 0;
+            border-top:1px solid var(--border);
+            border-bottom:1px solid var(--border);
+            background:var(--bg-elevated);
+        }
+        .ticker-track { display:flex; width:max-content; animation:roll 28s linear infinite; }
+        .ticker-item {
+            display:flex; align-items:center; gap:2.5rem; padding:0 2.5rem;
+            white-space:nowrap;
+            font-size:0.775rem; font-weight:600; letter-spacing:0.16em;
+            text-transform:uppercase; color:var(--text-sub);
+        }
+        .ticker-dot { width:5px; height:5px; border-radius:50%; background:var(--accent); display:inline-block; }
+        @keyframes roll { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+
+        /* === SECTION UTILITIES === */
+        .s-eye {
+            display:inline-flex; align-items:center; gap:0.625rem;
+            font-size:0.72rem; font-weight:600; letter-spacing:0.18em;
+            text-transform:uppercase; color:var(--accent-bright); margin-bottom:1.125rem;
+        }
+        .s-eye::before { content:''; width:16px; height:1.5px; background:var(--accent); }
+        .s-title {
+            font-family:var(--font-display); font-weight:700;
+            font-size:clamp(2rem,4.5vw,4rem);
+            line-height:1.06; letter-spacing:-0.035em;
+        }
+
+        /* === SERVICES === */
+        .services { padding:clamp(5rem,10vh,9rem) 0; }
+        .svc-head {
+            display:flex; align-items:flex-end; justify-content:space-between;
+            gap:3rem; margin-bottom:clamp(2.5rem,5vw,5rem);
+        }
+        .svc-intro { max-width:420px; font-size:1.0625rem; color:var(--text-sub); line-height:1.72; }
+        .svc-grid {
+            display:grid;
+            grid-template-columns:1.55fr 1fr 1fr;
+            grid-template-rows:auto auto;
+            gap:0.875rem;
+        }
+        .svc-card {
+            background:var(--bg-card);
+            border:1px solid var(--border);
+            border-radius:var(--r-lg);
+            padding:clamp(1.75rem,2.75vw,2.375rem);
+            position:relative; overflow:hidden;
+            transition:border-color 0.3s, transform 0.35s var(--ease-expo);
+        }
+        .svc-card:hover { border-color:var(--border-hover); transform:translateY(-4px); }
+        .svc-card::before {
+            content:''; position:absolute; top:0; left:0; right:0; height:1px;
+            background:linear-gradient(90deg,transparent,var(--accent),transparent);
+            opacity:0; transition:opacity 0.4s;
+        }
+        .svc-card:hover::before { opacity:1; }
+        .svc-card-a { grid-column:1; grid-row:1/3; display:flex; flex-direction:column; justify-content:space-between; min-height:440px; }
+        .svc-card-b { grid-column:2/4; }
+        .svc-num { font-size:0.72rem; font-weight:600; letter-spacing:0.15em; color:var(--text-muted); margin-bottom:1.875rem; }
+        .svc-ico {
+            width:46px; height:46px; border-radius:var(--r-sm);
+            background:var(--bg-elevated); border:1px solid var(--border);
+            display:flex; align-items:center; justify-content:center;
+            margin-bottom:1.375rem; color:var(--text-sub);
+        }
+        .svc-name {
+            font-family:var(--font-display); font-weight:700;
+            font-size:clamp(1.2rem,1.9vw,1.65rem);
+            letter-spacing:-0.025em; line-height:1.18; margin-bottom:0.875rem;
+        }
+        .svc-desc { font-size:0.9375rem; color:var(--text-sub); line-height:1.68; margin-bottom:1.375rem; }
+        .svc-list { list-style:none; display:flex; flex-direction:column; gap:0.45rem; }
+        .svc-list li { display:flex; align-items:center; gap:0.75rem; font-size:0.875rem; color:var(--text-sub); }
+        .svc-list li::before { content:''; width:4px; height:4px; border-radius:50%; background:var(--accent); flex-shrink:0; }
+        .svc-link {
+            display:inline-flex; align-items:center; gap:0.5rem;
+            font-size:0.875rem; font-weight:600; color:var(--accent-bright);
+            margin-top:auto; padding-top:2rem;
+            transition:gap 0.25s var(--ease-spring);
+        }
+        .svc-link:hover { gap:0.875rem; }
+        .svc-glow {
+            position:absolute; border-radius:50%; filter:blur(55px);
+            pointer-events:none; opacity:0; transition:opacity 0.4s;
+        }
+        .svc-card:hover .svc-glow { opacity:1; }
+        .gp { width:200px; height:200px; background:var(--accent-glow); bottom:-60px; right:-40px; }
+        .gb { width:160px; height:160px; background:rgba(6,182,212,0.12); top:-40px; left:-30px; }
+
+        /* === STATS === */
+        .stats {
+            padding:3.5rem 0;
+            border-top:1px solid var(--border);
+            border-bottom:1px solid var(--border);
+            background:var(--bg-elevated);
+        }
+        .stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:2rem; }
+        .stat { text-align:center; padding:1.25rem; }
+        .stat-val {
+            font-family:var(--font-display); font-weight:800;
+            font-size:clamp(2.5rem,4vw,4rem);
+            letter-spacing:-0.045em; line-height:1; margin-bottom:0.5rem;
+        }
+        .stat-val .ac { color:var(--accent-bright); }
+        .stat-lbl { font-size:0.875rem; color:var(--text-muted); letter-spacing:0.04em; }
+
+        /* === WORK === */
+        .work { padding:clamp(5rem,10vh,9rem) 0; }
+        .work-head { display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:clamp(2.5rem,5vw,4.5rem); gap:2rem; }
+        .work-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+        .work-card {
+            position:relative; border-radius:var(--r-lg); overflow:hidden;
+            background:var(--bg-card); border:1px solid var(--border);
+            aspect-ratio:4/3; cursor:none;
+        }
+        .work-card:nth-child(1) { aspect-ratio:16/9; grid-column:1/3; }
+        .work-card:nth-child(4) { aspect-ratio:16/9; grid-column:1/3; }
+        .wc-bg { position:absolute; inset:0; transition:transform 0.65s var(--ease-expo); }
+        .work-card:hover .wc-bg { transform:scale(1.05); }
+        .wc-ov {
+            position:absolute; inset:0;
+            background:linear-gradient(to top,rgba(7,7,10,0.92) 0%,transparent 60%);
+            display:flex; flex-direction:column; justify-content:flex-end; padding:1.875rem;
+        }
+        .wc-tag {
+            display:inline-block; padding:0.35rem 0.825rem;
+            background:rgba(255,255,255,0.09);
+            backdrop-filter:blur(10px);
+            border:1px solid rgba(255,255,255,0.13);
+            border-radius:var(--r-full);
+            font-size:0.72rem; font-weight:500; letter-spacing:0.07em;
+            color:rgba(255,255,255,0.75); margin-bottom:0.875rem; width:fit-content;
+        }
+        .wc-title {
+            font-family:var(--font-display); font-weight:700;
+            font-size:clamp(1.1rem,2.5vw,1.625rem);
+            letter-spacing:-0.025em; line-height:1.18; margin-bottom:0.45rem;
+        }
+        .wc-sub { font-size:0.875rem; color:rgba(255,255,255,0.5); }
+        .bg1 { background:linear-gradient(135deg,#12103d 0%,#22186a 45%,#0f0e3a 100%); }
+        .bg2 { background:linear-gradient(135deg,#0f1e28 0%,#1b3545 45%,#2a4f65 100%); }
+        .bg3 { background:linear-gradient(135deg,#1a0823 0%,#3d1849 45%,#200535 100%); }
+        .bg4 { background:linear-gradient(135deg,#081c18 0%,#063c2d 45%,#0a2c23 100%); }
+
+        /* === PROCESS === */
+        .process { padding:clamp(5rem,10vh,9rem) 0; background:var(--bg-elevated); }
+        .process-head { margin-bottom:clamp(3rem,5vw,5rem); }
+        .process-steps { display:grid; grid-template-columns:repeat(4,1fr); }
+        .ps {
+            padding:2.375rem 1.875rem;
+            border-left:1px solid var(--border);
+            position:relative;
+        }
+        .ps:first-child { border-left:none; }
+        .ps-num { font-size:0.72rem; font-weight:600; letter-spacing:0.15em; color:var(--accent); margin-bottom:1.875rem; }
+        .ps-ico {
+            width:50px; height:50px; border-radius:var(--r-sm);
+            background:var(--bg-card); border:1px solid var(--border);
+            display:flex; align-items:center; justify-content:center;
+            margin-bottom:1.375rem; color:var(--text-sub);
+        }
+        .ps-name { font-family:var(--font-display); font-weight:700; font-size:1.0625rem; letter-spacing:-0.015em; margin-bottom:0.75rem; }
+        .ps-desc { font-size:0.9rem; color:var(--text-sub); line-height:1.68; }
+
+        /* === AI SECTION === */
+        .ai-sec { padding:clamp(5rem,10vh,9rem) 0; }
+        .ai-inner { display:grid; grid-template-columns:1fr 1fr; gap:clamp(3rem,6vw,7rem); align-items:center; }
+        .ai-feats { display:flex; flex-direction:column; gap:0.75rem; margin-top:2rem; }
+        .ai-feat {
+            display:flex; align-items:flex-start; gap:1rem;
+            padding:1.125rem 1.375rem;
+            background:var(--bg-card); border:1px solid var(--border);
+            border-radius:var(--r-md);
+            transition:border-color 0.25s;
+        }
+        .ai-feat:hover { border-color:var(--border-hover); }
+        .af-ico {
+            width:34px; height:34px; border-radius:7px;
+            background:var(--accent-glow);
+            display:flex; align-items:center; justify-content:center; flex-shrink:0;
+        }
+        .af-title { font-family:var(--font-display); font-weight:600; font-size:0.9375rem; letter-spacing:-0.01em; margin-bottom:0.2rem; }
+        .af-desc { font-size:0.875rem; color:var(--text-sub); line-height:1.55; }
+        .ai-vis { position:relative; }
+        .ai-card {
+            background:var(--bg-card); border:1px solid var(--border);
+            border-radius:var(--r-xl); padding:1.875rem; overflow:hidden;
+        }
+        .ai-card-label { font-size:0.72rem; font-weight:600; letter-spacing:0.13em; text-transform:uppercase; color:var(--text-muted); margin-bottom:1rem; }
+        .terminal {
+            background:rgba(0,0,0,0.45); border:1px solid var(--border);
+            border-radius:var(--r-md); padding:1.375rem;
+            font-family:'Courier New',monospace; font-size:0.8rem; line-height:1.75;
+        }
+        .tg { color:#4ADE80; } .tb { color:#60A5FA; } .tp { color:#A78BFA; }
+        .tgr { color:#6B7280; } .tw { color:#F9FAFB; }
+        .ai-metrics { display:grid; grid-template-columns:repeat(3,1fr); gap:0.75rem; margin-top:1rem; }
+        .ai-metric {
+            background:var(--bg-elevated); border:1px solid var(--border);
+            border-radius:var(--r-md); padding:1rem; text-align:center;
+        }
+        .am-val { font-family:var(--font-display); font-size:1.4375rem; font-weight:700; color:var(--accent-bright); letter-spacing:-0.03em; }
+        .am-lbl { font-size:0.72rem; color:var(--text-muted); margin-top:0.25rem; }
+        .ai-badge {
+            position:absolute; top:-1.25rem; right:-0.75rem;
+            background:var(--bg-card); border:1px solid var(--border-hover);
+            border-radius:var(--r-md); padding:0.875rem 1.125rem;
+            display:flex; align-items:center; gap:0.75rem;
+            box-shadow:0 20px 60px rgba(0,0,0,0.45);
+        }
+        .pulse-dot { width:8px; height:8px; border-radius:50%; background:#4ADE80; animation:pd 2s ease infinite; flex-shrink:0; }
+        @keyframes pd { 0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.55;transform:scale(0.8)} }
+        .ab-title { font-family:var(--font-display); font-weight:600; font-size:0.875rem; letter-spacing:-0.01em; }
+        .ab-sub { font-size:0.72rem; color:var(--text-muted); }
+
+        /* === TESTIMONIALS === */
+        .testi { padding:clamp(5rem,10vh,9rem) 0; background:var(--bg-elevated); }
+        .testi-head { margin-bottom:clamp(3rem,5vw,5rem); }
+        .testi-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem; }
+        .tc {
+            background:var(--bg-card); border:1px solid var(--border);
+            border-radius:var(--r-lg); padding:2rem;
+            transition:border-color 0.3s, transform 0.35s var(--ease-expo);
+        }
+        .tc:hover { border-color:var(--border-hover); transform:translateY(-5px); }
+        .tc:first-child { grid-column:1/3; }
+        .tc-stars { color:#FFB800; font-size:0.875rem; margin-bottom:1.25rem; letter-spacing:0.08em; }
+        .tc-quote {
+            font-family:var(--font-serif); font-weight:300; font-style:italic;
+            font-size:clamp(1rem,1.4vw,1.2rem); line-height:1.7;
+            margin-bottom:1.75rem; color:var(--text);
+        }
+        .tc-author { display:flex; align-items:center; gap:0.9rem; }
+        .tc-avatar {
+            width:42px; height:42px; border-radius:50%;
+            background:var(--bg-elevated); border:2px solid var(--border);
+            display:flex; align-items:center; justify-content:center;
+            font-family:var(--font-display); font-weight:700; font-size:0.8125rem;
+            color:var(--accent-bright); flex-shrink:0;
+        }
+        .tc-name { font-family:var(--font-display); font-weight:600; font-size:0.9375rem; letter-spacing:-0.01em; }
+        .tc-role { font-size:0.8rem; color:var(--text-muted); }
+
+        /* === CTA === */
+        .cta-sec { padding:clamp(5rem,11vh,10rem) 0; text-align:center; position:relative; overflow:hidden; }
+        .cta-sec::before {
+            content:''; position:absolute; top:50%; left:50%;
+            transform:translate(-50%,-50%);
+            width:700px; height:500px;
+            background:radial-gradient(ellipse, rgba(109,95,237,0.18) 0%, transparent 68%);
+            pointer-events:none;
+        }
+        .cta-inner { position:relative; z-index:1; }
+        .cta-badge {
+            display:inline-flex; align-items:center; gap:0.5rem;
+            padding:0.5rem 1.125rem;
+            background:rgba(109,95,237,0.1); border:1px solid rgba(109,95,237,0.28);
+            border-radius:var(--r-full);
+            font-size:0.8rem; font-weight:500; color:var(--accent-bright); letter-spacing:0.04em;
+            margin-bottom:2rem;
+        }
+        .cta-badge .pulse-dot { background:var(--accent-bright); }
+        .cta-title {
+            font-family:var(--font-display); font-weight:800;
+            font-size:clamp(2.75rem,7vw,7rem);
+            letter-spacing:-0.045em; line-height:0.95; margin-bottom:1.5rem;
+        }
+        .cta-title .serif-word { font-family:var(--font-serif); font-weight:300; font-style:italic; color:var(--accent-bright); font-size:0.88em; }
+        .cta-sub { font-size:1.0625rem; color:var(--text-sub); max-width:440px; margin:0 auto 2.5rem; line-height:1.7; }
+        .cta-acts { display:flex; align-items:center; justify-content:center; gap:1rem; flex-wrap:wrap; }
+
+        /* === FOOTER === */
+        .footer { padding:4rem 0 2rem; border-top:1px solid var(--border); }
+        .footer-top { display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:3rem; margin-bottom:4rem; }
+        .footer-logo { font-family:var(--font-display); font-weight:800; font-size:1.4375rem; letter-spacing:-0.03em; margin-bottom:1rem; }
+        .footer-logo span { color:var(--accent-bright); }
+        .footer-tag { font-size:0.9375rem; color:var(--text-sub); line-height:1.7; max-width:250px; margin-bottom:1.5rem; }
+        .footer-socials { display:flex; gap:0.625rem; }
+        .soc {
+            width:37px; height:37px; border-radius:50%;
+            border:1px solid var(--border);
+            display:flex; align-items:center; justify-content:center; font-size:0.875rem;
+            transition:border-color 0.2s, background 0.2s, transform 0.25s var(--ease-spring);
+        }
+        .soc:hover { border-color:var(--border-hover); background:rgba(255,255,255,0.04); transform:translateY(-2px); }
+        .fn-title { font-size:0.75rem; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--text-muted); margin-bottom:1.25rem; }
+        .fn-list { list-style:none; display:flex; flex-direction:column; gap:0.75rem; }
+        .fn-list a { font-size:0.9375rem; color:var(--text-sub); transition:color 0.2s; }
+        .fn-list a:hover { color:var(--text); }
+        .footer-bot {
+            display:flex; align-items:center; justify-content:space-between;
+            padding-top:2rem; border-top:1px solid var(--border); gap:1rem; flex-wrap:wrap;
+        }
+        .footer-copy { font-size:0.8rem; color:var(--text-muted); }
+        .footer-legal { display:flex; gap:1.5rem; }
+        .footer-legal a { font-size:0.8rem; color:var(--text-muted); transition:color 0.2s; }
+        .footer-legal a:hover { color:var(--text-sub); }
+
+        /* Reveal base */
+        .rev { opacity:0; transform:translateY(48px); }
+
+        /* === SCROLLBAR === */
+        ::-webkit-scrollbar { width:5px; }
+        ::-webkit-scrollbar-track { background:var(--bg); }
+        ::-webkit-scrollbar-thumb { background:var(--bg-card); border-radius:3px; }
+
+        /* === RESPONSIVE === */
+        @media(max-width:1024px){
+            .svc-grid { grid-template-columns:1fr 1fr; }
+            .svc-card-a { grid-column:1/3; grid-row:auto; min-height:320px; }
+            .svc-card-b { grid-column:auto; }
+            .process-steps { grid-template-columns:1fr 1fr; }
+            .ps:nth-child(2) { border-left:1px solid var(--border); }
+            .ps:nth-child(3) { border-left:none; }
+            .ai-inner { grid-template-columns:1fr; }
+            .testi-grid { grid-template-columns:1fr 1fr; }
+            .tc:first-child { grid-column:1/3; }
+            .footer-top { grid-template-columns:1fr 1fr; gap:2rem; }
+        }
+        @media(max-width:768px){
+            body { cursor:auto; }
+            .cursor,.cursor-ring { display:none; }
+            .nav-links { display:none; }
+            .nav-burger { display:flex; }
+            .hero-foot { flex-direction:column; align-items:flex-start; gap:1.5rem; }
+            .svc-head { flex-direction:column; align-items:flex-start; }
+            .svc-grid,.stats-grid { grid-template-columns:1fr; }
+            .svc-card-a,.svc-card-b { grid-column:1; }
+            .stats-grid { grid-template-columns:1fr 1fr; }
+            .work-grid { grid-template-columns:1fr; }
+            .work-card:nth-child(1),.work-card:nth-child(4) { grid-column:1; aspect-ratio:4/3; }
+            .process-steps { grid-template-columns:1fr; }
+            .ps { border-left:none; border-bottom:1px solid var(--border); }
+            .work-head { flex-direction:column; align-items:flex-start; }
+            .testi-grid { grid-template-columns:1fr; }
+            .tc:first-child { grid-column:1; }
+            .footer-top { grid-template-columns:1fr; }
+            .footer-bot { flex-direction:column; align-items:flex-start; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="cursor" id="cur"></div>
+<div class="cursor-ring" id="curR"></div>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+    <div class="nav-inner" id="navInner">
+        <a href="#" class="nav-logo">ROLAND<span>.</span></a>
+        <ul class="nav-links">
+            <li><a href="#services">Services</a></li>
+            <li><a href="#work">Work</a></li>
+            <li><a href="#process">Process</a></li>
+            <li><a href="#ai">AI</a></li>
+            <li><a href="#about">About</a></li>
+        </ul>
+        <a href="#contact" class="nav-cta">Start a project</a>
+        <button class="nav-burger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+    <div class="hero-vid">
+        <video autoplay muted loop playsinline>
+            <source src="video/kling_20260620_VIDEO_high_end_3_4814_0.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <div class="container">
+            <div class="hero-eye" id="hEye">Digital Experience Agency</div>
+            <h1 class="hero-title">
+                <span class="line" id="hl1">We Craft</span>
+                <span class="line" id="hl2"><em class="serif-word">Digital</em></span>
+                <span class="line" id="hl3">Futures</span>
+            </h1>
+            <div class="hero-foot">
+                <p class="hero-sub" id="hSub">World-class web design, iconic brand identities, and intelligent AI automation systems that scale your business.</p>
+                <div class="hero-btns" id="hBtns">
+                    <a href="#work" class="btn-p mag">
+                        View our work
+                        <span class="arr">
+                            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 8L8 2M8 2H3M8 2V7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </span>
+                    </a>
+                    <a href="#services" class="btn-g mag">Our services</a>
+                </div>
+                <div class="hero-scroll-ind" id="hScr">
+                    <div class="scroll-line"></div>
+                    <span>Scroll</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+    <div class="ticker-track">
+        <div class="ticker-item">WEB DESIGN <span class="ticker-dot"></span></div>
+        <div class="ticker-item">BRAND IDENTITY <span class="ticker-dot"></span></div>
+        <div class="ticker-item">AI AUTOMATION <span class="ticker-dot"></span></div>
+        <div class="ticker-item">DIGITAL STRATEGY <span class="ticker-dot"></span></div>
+        <div class="ticker-item">UI/UX DESIGN <span class="ticker-dot"></span></div>
+        <div class="ticker-item">WEB DEVELOPMENT <span class="ticker-dot"></span></div>
+        <div class="ticker-item">AI INTEGRATION <span class="ticker-dot"></span></div>
+        <div class="ticker-item">CREATIVE DIRECTION <span class="ticker-dot"></span></div>
+        <div class="ticker-item">WEB DESIGN <span class="ticker-dot"></span></div>
+        <div class="ticker-item">BRAND IDENTITY <span class="ticker-dot"></span></div>
+        <div class="ticker-item">AI AUTOMATION <span class="ticker-dot"></span></div>
+        <div class="ticker-item">DIGITAL STRATEGY <span class="ticker-dot"></span></div>
+        <div class="ticker-item">UI/UX DESIGN <span class="ticker-dot"></span></div>
+        <div class="ticker-item">WEB DEVELOPMENT <span class="ticker-dot"></span></div>
+        <div class="ticker-item">AI INTEGRATION <span class="ticker-dot"></span></div>
+        <div class="ticker-item">CREATIVE DIRECTION <span class="ticker-dot"></span></div>
+    </div>
+</div>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+    <div class="container">
+        <div class="svc-head rev">
+            <div>
+                <div class="s-eye">What we do</div>
+                <h2 class="s-title">Services built for<br>market leaders</h2>
+            </div>
+            <p class="svc-intro">We work with ambitious brands to deliver exceptional digital products. Every pixel, every interaction, every line of code crafted with intention.</p>
+        </div>
+
+        <div class="svc-grid">
+            <!-- Web Design (tall) -->
+            <div class="svc-card svc-card-a rev">
+                <div>
+                    <div class="svc-num">01</div>
+                    <div class="svc-ico">
+                        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+                    </div>
+                    <h3 class="svc-name">Web Design &amp;<br>Development</h3>
+                    <p class="svc-desc">We design and build digital experiences that convert visitors into loyal customers. From concept to launch, every detail engineered for impact.</p>
+                    <ul class="svc-list">
+                        <li>Custom UI/UX Design</li>
+                        <li>React &amp; Next.js Development</li>
+                        <li>Webflow &amp; CMS Build</li>
+                        <li>E-Commerce Solutions</li>
+                        <li>Performance Optimization</li>
+                    </ul>
+                </div>
+                <a href="#contact" class="svc-link">
+                    Start a project
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+                <div class="svc-glow gp"></div>
+            </div>
+
+            <!-- Brand Identity -->
+            <div class="svc-card rev">
+                <div class="svc-num">02</div>
+                <div class="svc-ico">
+                    <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                </div>
+                <h3 class="svc-name">Brand Identity &amp; Design</h3>
+                <p class="svc-desc">Strategic branding that captures your essence and commands attention in a crowded market. From logo to full visual systems.</p>
+                <a href="#contact" class="svc-link">
+                    Brand me
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+                <div class="svc-glow gb"></div>
+            </div>
+
+            <!-- AI Automation (wide) -->
+            <div class="svc-card svc-card-b rev" style="background:linear-gradient(135deg,#0c0b1b 0%,#10102a 100%);">
+                <div class="svc-num">03</div>
+                <div class="svc-ico" style="background:rgba(109,95,237,0.15);border-color:rgba(109,95,237,0.3);">
+                    <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#9187FF" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+                </div>
+                <h3 class="svc-name">AI Automation Systems</h3>
+                <p class="svc-desc">Intelligent automation that eliminates repetitive work, surfaces insights, and scales operations 10x without scaling your team.</p>
+                <a href="#ai" class="svc-link">
+                    Explore AI
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+                <div class="svc-glow gp"></div>
+            </div>
+
+            <!-- Strategy -->
+            <div class="svc-card rev">
+                <div class="svc-num">04</div>
+                <div class="svc-ico">
+                    <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 20h.01M7 20v-4M12 20v-8M17 20V8M22 4v16"/></svg>
+                </div>
+                <h3 class="svc-name">Digital Strategy</h3>
+                <p class="svc-desc">Data-driven strategy to position your digital presence for maximum impact. We define the roadmap before a single pixel is placed.</p>
+                <a href="#contact" class="svc-link">
+                    Get started
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+                <div class="svc-glow gb"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat rev">
+                <div class="stat-val"><span class="cnt" data-t="50">0</span><span class="ac">+</span></div>
+                <div class="stat-lbl">Projects delivered</div>
+            </div>
+            <div class="stat rev">
+                <div class="stat-val"><span class="ac">$</span><span class="cnt" data-t="2">0</span><span class="ac">M+</span></div>
+                <div class="stat-lbl">Revenue generated for clients</div>
+            </div>
+            <div class="stat rev">
+                <div class="stat-val"><span class="cnt" data-t="98">0</span><span class="ac">%</span></div>
+                <div class="stat-lbl">Client satisfaction rate</div>
+            </div>
+            <div class="stat rev">
+                <div class="stat-val"><span class="cnt" data-t="5">0</span><span class="ac">x</span></div>
+                <div class="stat-lbl">Average ROI increase</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- WORK -->
+<section class="work" id="work">
+    <div class="container">
+        <div class="work-head rev">
+            <div>
+                <div class="s-eye">Selected work</div>
+                <h2 class="s-title">Proof in pixels</h2>
+            </div>
+            <a href="#contact" class="btn-g">View all projects</a>
+        </div>
+
+        <div class="work-grid">
+            <!-- Wide -->
+            <div class="work-card rev">
+                <div class="wc-bg bg1">
+                    <div style="position:absolute;bottom:0;right:8%;width:64%;height:82%;background:rgba(109,95,237,0.07);border-radius:14px 14px 0 0;border:1px solid rgba(109,95,237,0.12);border-bottom:none;display:flex;align-items:center;justify-content:center;">
+                        <span style="font-family:var(--font-display);font-weight:700;font-size:clamp(1rem,2vw,1.5rem);letter-spacing:-0.02em;color:rgba(255,255,255,0.12);">nexus.studio</span>
+                    </div>
+                </div>
+                <div class="wc-ov">
+                    <span class="wc-tag">Web Design + Development</span>
+                    <h3 class="wc-title">Nexus Studio</h3>
+                    <p class="wc-sub">Creative agency website with immersive scroll experiences</p>
+                </div>
+            </div>
+
+            <!-- Square -->
+            <div class="work-card rev">
+                <div class="wc-bg bg2">
+                    <div style="position:absolute;inset:1.5rem;border:1px solid rgba(255,255,255,0.08);border-radius:10px;display:flex;align-items:center;justify-content:center;">
+                        <div style="text-align:center;">
+                            <div style="width:54px;height:54px;border-radius:14px;background:rgba(255,255,255,0.07);margin:0 auto 1rem;display:flex;align-items:center;justify-content:center;font-size:1.5rem;">🏔</div>
+                            <div style="font-family:var(--font-display);font-weight:700;color:rgba(255,255,255,0.55);letter-spacing:-0.02em;">Altitude Brand</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="wc-ov">
+                    <span class="wc-tag">Brand Identity</span>
+                    <h3 class="wc-title">Altitude Co.</h3>
+                    <p class="wc-sub">Complete brand system for outdoor lifestyle brand</p>
+                </div>
+            </div>
+
+            <!-- Square -->
+            <div class="work-card rev">
+                <div class="wc-bg bg3">
+                    <div style="position:absolute;top:1.5rem;left:1.5rem;right:1.5rem;border:1px solid rgba(109,95,237,0.2);border-radius:10px;padding:1.25rem;background:rgba(109,95,237,0.05);">
+                        <div style="font-size:0.68rem;color:rgba(255,255,255,0.35);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.75rem;">AI Pipeline Status</div>
+                        <div style="display:flex;flex-direction:column;gap:0.5rem;">
+                            <div style="height:5px;background:rgba(145,135,255,0.5);border-radius:3px;width:78%;"></div>
+                            <div style="height:5px;background:rgba(145,135,255,0.3);border-radius:3px;width:55%;"></div>
+                            <div style="height:5px;background:rgba(145,135,255,0.18);border-radius:3px;width:91%;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="wc-ov">
+                    <span class="wc-tag">AI Automation</span>
+                    <h3 class="wc-title">FlowAI Platform</h3>
+                    <p class="wc-sub">Intelligent workflow automation for SaaS companies</p>
+                </div>
+            </div>
+
+            <!-- Wide -->
+            <div class="work-card rev">
+                <div class="wc-bg bg4">
+                    <div style="position:absolute;inset:0;display:flex;align-items:center;padding:clamp(1.5rem,4vw,3rem);">
+                        <div>
+                            <div style="font-family:var(--font-display);font-weight:800;font-size:clamp(2rem,5vw,4.5rem);letter-spacing:-0.05em;color:rgba(255,255,255,0.1);line-height:0.88;">VERDE<br>MARKET</div>
+                        </div>
+                        <div style="margin-left:auto;display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;width:42%;">
+                            <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:8px;aspect-ratio:1;"></div>
+                            <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:8px;aspect-ratio:1;"></div>
+                            <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:8px;aspect-ratio:1;"></div>
+                            <div style="background:rgba(74,222,128,0.07);border:1px solid rgba(74,222,128,0.14);border-radius:8px;aspect-ratio:1;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="wc-ov">
+                    <span class="wc-tag">E-Commerce + Web Design</span>
+                    <h3 class="wc-title">Verde Market</h3>
+                    <p class="wc-sub">Sustainable grocery platform, 340% conversion increase</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- PROCESS -->
+<section class="process" id="process">
+    <div class="container">
+        <div class="process-head rev">
+            <div class="s-eye">How we work</div>
+            <h2 class="s-title">Our process</h2>
+        </div>
+        <div class="process-steps">
+            <div class="ps rev">
+                <div class="ps-num">01</div>
+                <div class="ps-ico">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                </div>
+                <h3 class="ps-name">Discovery</h3>
+                <p class="ps-desc">We immerse ourselves in your business, audience, and goals. A week of deep research before a single pixel is placed.</p>
+            </div>
+            <div class="ps rev">
+                <div class="ps-num">02</div>
+                <div class="ps-ico">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                </div>
+                <h3 class="ps-name">Strategy</h3>
+                <p class="ps-desc">Data-driven strategy defining information architecture, user flows, and the narrative your digital presence will tell.</p>
+            </div>
+            <div class="ps rev">
+                <div class="ps-num">03</div>
+                <div class="ps-ico">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg>
+                </div>
+                <h3 class="ps-name">Design</h3>
+                <p class="ps-desc">High-fidelity, pixel-perfect design systems built in Figma. Every interaction, every state, documented and refined.</p>
+            </div>
+            <div class="ps rev">
+                <div class="ps-num">04</div>
+                <div class="ps-ico">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                </div>
+                <h3 class="ps-name">Build</h3>
+                <p class="ps-desc">Clean, performant code with modern frameworks. Engineered for speed, scalability, and an exceptional user experience.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- AI AUTOMATION -->
+<section class="ai-sec" id="ai">
+    <div class="container">
+        <div class="ai-inner">
+            <div class="rev">
+                <div class="s-eye">AI Automation</div>
+                <h2 class="s-title">Automate the work.<br>Amplify the results.</h2>
+                <p style="font-size:1.0625rem;color:var(--text-sub);line-height:1.72;margin:1.5rem 0 0;">We build intelligent AI systems that eliminate repetitive workflows, surface business intelligence, and let your team focus on what drives growth.</p>
+                <div class="ai-feats">
+                    <div class="ai-feat">
+                        <div class="af-ico">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#9187FF" stroke-width="1.5" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                        </div>
+                        <div>
+                            <div class="af-title">Workflow Automation</div>
+                            <p class="af-desc">Connect your tools and automate multi-step processes across your entire stack without code.</p>
+                        </div>
+                    </div>
+                    <div class="ai-feat">
+                        <div class="af-ico">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#9187FF" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+                        </div>
+                        <div>
+                            <div class="af-title">AI Agents &amp; Copilots</div>
+                            <p class="af-desc">Custom AI agents that handle customer support, data analysis, and content at scale.</p>
+                        </div>
+                    </div>
+                    <div class="ai-feat">
+                        <div class="af-ico">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#9187FF" stroke-width="1.5" stroke-linecap="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                        </div>
+                        <div>
+                            <div class="af-title">API &amp; System Integration</div>
+                            <p class="af-desc">Seamlessly connect your existing tools with AI capabilities through custom-built API bridges.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ai-vis rev">
+                <div class="ai-card">
+                    <div class="ai-card-label">Live AI Pipeline</div>
+                    <div class="terminal" id="terminal">
+                        <div><span class="tgr">$</span> <span class="tb">roland_ai</span><span class="tw">.run(pipeline)</span></div>
+                        <div><span class="tgr">&#x2192;</span> <span class="tg">Ingesting</span> <span class="tw">1,247 data points...</span></div>
+                        <div><span class="tgr">&#x2192;</span> <span class="tp">Classifying</span> <span class="tw">intent patterns</span></div>
+                        <div><span class="tgr">&#x2192;</span> <span class="tg">Routing</span> <span class="tw">to response engine</span></div>
+                        <div><span class="tgr">&#x2192;</span> <span class="tb">Generating</span> <span class="tw">optimized output</span></div>
+                        <div style="margin-top:0.4rem"><span class="tg">&#x2713;</span> <span class="tw">Pipeline complete</span> <span class="tgr">in 1.2s</span></div>
+                    </div>
+                    <div class="ai-metrics">
+                        <div class="ai-metric"><div class="am-val">99.9%</div><div class="am-lbl">Uptime</div></div>
+                        <div class="ai-metric"><div class="am-val">1.2s</div><div class="am-lbl">Avg response</div></div>
+                        <div class="ai-metric"><div class="am-val">10x</div><div class="am-lbl">Efficiency</div></div>
+                    </div>
+                </div>
+                <div class="ai-badge">
+                    <div class="pulse-dot"></div>
+                    <div>
+                        <div class="ab-title">AI Active</div>
+                        <div class="ab-sub">Processing 847 tasks/hr</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testi" id="about">
+    <div class="container">
+        <div class="testi-head rev">
+            <div class="s-eye">Client results</div>
+            <h2 class="s-title">Trusted by ambitious brands</h2>
+        </div>
+        <div class="testi-grid">
+            <div class="tc rev">
+                <div class="tc-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                <p class="tc-quote">"Roland Agency completely transformed our digital presence. The website they designed isn't just beautiful, it converts. Within 3 months of launch, inbound leads increased by 280%. Worth every penny and more."</p>
+                <div class="tc-author">
+                    <div class="tc-avatar">SK</div>
+                    <div>
+                        <div class="tc-name">Sarah Kim</div>
+                        <div class="tc-role">CEO, Nexus Studios</div>
+                    </div>
+                </div>
+            </div>
+            <div class="tc rev">
+                <div class="tc-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                <p class="tc-quote">"The AI automation system Roland built saves us 40+ hours per week. The ROI was clear within the first month of going live."</p>
+                <div class="tc-author">
+                    <div class="tc-avatar">MJ</div>
+                    <div>
+                        <div class="tc-name">Marcus Johnson</div>
+                        <div class="tc-role">CTO, FlowTech</div>
+                    </div>
+                </div>
+            </div>
+            <div class="tc rev">
+                <div class="tc-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                <p class="tc-quote">"Our brand went from generic to iconic. Roland understood our vision and elevated it beyond what we imagined possible."</p>
+                <div class="tc-author">
+                    <div class="tc-avatar">AL</div>
+                    <div>
+                        <div class="tc-name">Amara Lewis</div>
+                        <div class="tc-role">Founder, Altitude Co.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="tc rev">
+                <div class="tc-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                <p class="tc-quote">"Exceptional execution from discovery through launch. They hold themselves to a standard most agencies don't even aspire to."</p>
+                <div class="tc-author">
+                    <div class="tc-avatar">DC</div>
+                    <div>
+                        <div class="tc-name">David Chen</div>
+                        <div class="tc-role">VP Marketing, Verde</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-sec" id="contact">
+    <div class="container">
+        <div class="cta-inner rev">
+            <div class="cta-badge">
+                <div class="pulse-dot"></div>
+                Now taking new projects
+            </div>
+            <h2 class="cta-title">
+                Let's build<br>
+                <em class="serif-word">something</em><br>
+                extraordinary
+            </h2>
+            <p class="cta-sub">Whether you need a world-class website, a powerful brand identity, or AI systems that transform your operations, we're ready.</p>
+            <div class="cta-acts">
+                <a href="mailto:hello@rolandagency.com" class="btn-p mag">
+                    Start your project
+                    <span class="arr">
+                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 8L8 2M8 2H3M8 2V7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </span>
+                </a>
+                <a href="tel:+1234567890" class="btn-g mag">Schedule a call</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-top">
+            <div>
+                <div class="footer-logo">ROLAND<span>.</span></div>
+                <p class="footer-tag">We craft digital experiences that drive results for ambitious brands worldwide.</p>
+                <div class="footer-socials">
+                    <a href="#" class="soc" aria-label="X / Twitter">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    </a>
+                    <a href="#" class="soc" aria-label="LinkedIn">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                    </a>
+                    <a href="#" class="soc" aria-label="Instagram">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+                    </a>
+                    <a href="#" class="soc" aria-label="Dribbble">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 24C5.385 24 0 18.615 0 12S5.385 0 12 0s12 5.385 12 12-5.385 12-12 12zm10.12-10.358c-.35-.11-3.17-.953-6.384-.438 1.34 3.684 1.887 6.684 1.992 7.308 2.3-1.555 3.936-4.02 4.395-6.87zm-6.115 7.808c-.153-.9-.75-4.032-2.19-7.77l-.066.02c-5.79 2.015-7.86 6.025-8.048 6.36 1.73 1.358 3.92 2.166 6.29 2.166 1.42 0 2.77-.29 4.01-.776zm-11.08-3.23c.238-.42 3.098-5.297 8.305-6.963.145-.048.293-.09.44-.13-.28-.633-.58-1.267-.897-1.892-5.073 1.517-10.02 1.454-10.44 1.44-.003.08-.005.17-.005.25 0 2.16.67 4.16 1.8 5.805zm-1.615-7.638c.43.01 4.81.048 9.57-1.25-1.715-3.046-3.563-5.6-3.828-5.966-2.905 1.37-5.095 3.914-5.742 7.216zm6.415-8.28c.28.37 2.164 2.917 3.86 6.043 3.675-1.38 5.23-3.47 5.416-3.73-1.752-1.56-4.067-2.507-6.6-2.507-.567 0-1.123.055-1.666.162zm9.535 4.04c-.22.29-1.947 2.512-5.77 4.075.243.5.478 1.014.7 1.538.081.19.162.38.24.572 3.4-.43 6.78.26 7.1.33-.018-2.53-.84-4.87-2.27-6.52z"/></svg>
+                    </a>
+                </div>
+            </div>
+            <div>
+                <div class="fn-title">Services</div>
+                <ul class="fn-list">
+                    <li><a href="#services">Web Design</a></li>
+                    <li><a href="#services">Web Development</a></li>
+                    <li><a href="#services">Brand Identity</a></li>
+                    <li><a href="#ai">AI Automation</a></li>
+                    <li><a href="#services">Digital Strategy</a></li>
+                </ul>
+            </div>
+            <div>
+                <div class="fn-title">Company</div>
+                <ul class="fn-list">
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#work">Work</a></li>
+                    <li><a href="#process">Process</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="#">Careers</a></li>
+                </ul>
+            </div>
+            <div>
+                <div class="fn-title">Get in touch</div>
+                <ul class="fn-list">
+                    <li><a href="mailto:hello@rolandagency.com">hello@rolandagency.com</a></li>
+                    <li><a href="#">Book a discovery call</a></li>
+                    <li><a href="#">Project inquiry</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bot">
+            <div class="footer-copy">&#169; 2026 Roland Agency. All rights reserved.</div>
+            <div class="footer-legal">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Cookies</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+/* CURSOR */
+const cur = document.getElementById('cur');
+const curR = document.getElementById('curR');
+let mx = 0, my = 0, rx = 0, ry = 0;
+
+document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cur.style.left = mx + 'px';
+    cur.style.top = my + 'px';
+});
+
+(function loop() {
+    rx += (mx - rx) * 0.11;
+    ry += (my - ry) * 0.11;
+    curR.style.left = rx + 'px';
+    curR.style.top = ry + 'px';
+    requestAnimationFrame(loop);
+})();
+
+document.querySelectorAll('a,button,.svc-card,.work-card,.tc').forEach(el => {
+    el.addEventListener('mouseenter', () => { cur.classList.add('hov'); curR.classList.add('hov'); });
+    el.addEventListener('mouseleave', () => { cur.classList.remove('hov'); curR.classList.remove('hov'); });
+});
+
+/* MAGNETIC BUTTONS */
+document.querySelectorAll('.mag').forEach(el => {
+    el.addEventListener('mousemove', e => {
+        const r = el.getBoundingClientRect();
+        const x = (e.clientX - r.left - r.width / 2) * 0.22;
+        const y = (e.clientY - r.top - r.height / 2) * 0.22;
+        el.style.transform = `translate(${x}px,${y}px)`;
+        el.style.transition = 'transform 0.1s';
+    });
+    el.addEventListener('mouseleave', () => {
+        el.style.transform = '';
+        el.style.transition = 'transform 0.45s cubic-bezier(0.19,1,0.22,1)';
+    });
+});
+
+/* NAV SCROLL */
+window.addEventListener('scroll', () => {
+    document.getElementById('navInner').classList.toggle('scrolled', window.scrollY > 60);
+}, { passive: true });
+
+/* HERO ENTRANCE */
+const heroTl = gsap.timeline({ delay: 0.2 });
+heroTl
+    .fromTo('#hEye', { opacity:0, y:16 }, { opacity:1, y:0, duration:0.7, ease:'power3.out' })
+    .fromTo('#hl1,#hl2,#hl3', { opacity:0, y:70 }, { opacity:1, y:0, duration:1, ease:'power3.out', stagger:0.1 }, '-=0.3')
+    .fromTo('#hSub', { opacity:0, y:18 }, { opacity:1, y:0, duration:0.75, ease:'power3.out' }, '-=0.4')
+    .fromTo('#hBtns', { opacity:0, y:18 }, { opacity:1, y:0, duration:0.75, ease:'power3.out' }, '-=0.55')
+    .fromTo('#hScr', { opacity:0 }, { opacity:1, duration:0.8 }, '-=0.3');
+
+/* HERO VIDEO PARALLAX */
+gsap.to('.hero-vid video', {
+    yPercent: 18, ease: 'none',
+    scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true }
+});
+
+/* SCROLL REVEALS */
+gsap.utils.toArray('.rev').forEach((el, i) => {
+    gsap.fromTo(el,
+        { opacity:0, y:52 },
+        { opacity:1, y:0, duration:0.95, ease:'power3.out', delay:(i % 4) * 0.08,
+          scrollTrigger: { trigger:el, start:'top 89%', toggleActions:'play none none none' }
+        }
+    );
+});
+
+/* COUNTERS */
+const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+        if (!e.isIntersecting || e.target.dataset.done) return;
+        e.target.dataset.done = '1';
+        const t = +e.target.dataset.t;
+        const s = performance.now();
+        const dur = 1800;
+        (function tick(now) {
+            const p = Math.min((now - s) / dur, 1);
+            e.target.textContent = Math.round((1 - Math.pow(1 - p, 3)) * t);
+            if (p < 1) requestAnimationFrame(tick);
+        })(s);
+    });
+}, { threshold: 0.5 });
+document.querySelectorAll('.cnt').forEach(c => obs.observe(c));
+
+/* TERMINAL LINES */
+gsap.utils.toArray('#terminal > div').forEach((line, i) => {
+    gsap.fromTo(line,
+        { opacity:0, x:-12 },
+        { opacity:1, x:0, duration:0.4, ease:'power2.out', delay:i * 0.28,
+          scrollTrigger: { trigger:'#terminal', start:'top 82%', toggleActions:'play none none none' }
+        }
+    );
+});
+</script>
+</body>
+</html>
